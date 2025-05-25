@@ -1,0 +1,121 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --background: 0 0% 100%; /* #FFFFFF */
+  --foreground: 222 84% 4.9%; /* #0f172a */
+  --muted: 210 40% 98%; /* #f8fafc */
+  --muted-foreground: 215.4 16.3% 46.9%; /* #64748b */
+  --popover: 0 0% 100%; /* #FFFFFF */
+  --popover-foreground: 222 84% 4.9%; /* #0f172a */
+  --card: 0 0% 100%; /* #FFFFFF */
+  --card-foreground: 222 84% 4.9%; /* #0f172a */
+  --border: 214.3 31.8% 91.4%; /* #e2e8f0 */
+  --input: 214.3 31.8% 91.4%; /* #e2e8f0 */
+  --primary: 217 91% 60%; /* #2563eb */
+  --primary-foreground: 0 0% 100%; /* #FFFFFF */
+  --secondary: 210 40% 98%; /* #f8fafc */
+  --secondary-foreground: 222 84% 4.9%; /* #0f172a */
+  --accent: 210 40% 98%; /* #f8fafc */
+  --accent-foreground: 222 84% 4.9%; /* #0f172a */
+  --destructive: 0 84% 60%; /* #EF4444 */
+  --destructive-foreground: 0 0% 98%; /* #FAFAFA */
+  --ring: 217 91% 60%; /* #2563eb */
+  --radius: 0.625rem; /* 10px */
+  
+  /* Custom EarnZilla colors */
+  --royal-blue: 217 91% 60%; /* #2563eb */
+  --success: 142 76% 36%; /* #27ae60 */
+  --error: 0 84% 60%; /* #e74c3c */
+}
+
+.dark {
+  --background: 233 47% 7%; /* #0F0F1A */
+  --foreground: 0 0% 98%; /* #FAFAFA */
+  --muted: 233 47% 10%; /* #16172B */
+  --muted-foreground: 215 16% 65%; /* #94A3B8 */
+  --popover: 233 47% 7%; /* #0F0F1A */
+  --popover-foreground: 0 0% 98%; /* #FAFAFA */
+  --card: 233 47% 7%; /* #0F0F1A */
+  --card-foreground: 0 0% 98%; /* #FAFAFA */
+  --border: 233 47% 15%; /* #1a1a2e */
+  --input: 233 47% 15%; /* #1a1a2e */
+  --primary: 38 92% 50%; /* #f39c12 */
+  --primary-foreground: 0 0% 100%; /* #FFFFFF */
+  --secondary: 233 47% 15%; /* #1a1a2e */
+  --secondary-foreground: 0 0% 98%; /* #FAFAFA */
+  --accent: 233 47% 15%; /* #1a1a2e */
+  --accent-foreground: 0 0% 98%; /* #FAFAFA */
+  --destructive: 0 62% 30%; /* #B91C1C */
+  --destructive-foreground: 0 0% 98%; /* #FAFAFA */
+  --ring: 38 92% 50%; /* #f39c12 */
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+    font-family: 'Poppins', sans-serif;
+  }
+}
+
+@layer utilities {
+  .text-royal-blue {
+    color: hsl(var(--royal-blue));
+  }
+  
+  .bg-royal-blue {
+    background-color: hsl(var(--royal-blue));
+  }
+  
+  .hover\:bg-royal-blue:hover {
+    background-color: hsl(var(--royal-blue));
+  }
+  
+  .text-success {
+    color: hsl(var(--success));
+  }
+  
+  .bg-success {
+    background-color: hsl(var(--success));
+  }
+  
+  .text-error {
+    color: hsl(var(--error));
+  }
+  
+  .bg-error {
+    background-color: hsl(var(--error));
+  }
+  
+  /* Button animations */
+  .button-hover {
+    @apply transition-all duration-200 ease-in-out transform hover:scale-105 hover:shadow-lg;
+  }
+  
+  /* Fade-in animation */
+  .fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  /* Pop notification animation */
+  .pop-notification {
+    animation: popIn 0.3s ease-out;
+  }
+  
+  @keyframes popIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+}

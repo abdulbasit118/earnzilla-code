@@ -1,0 +1,194 @@
+Payout Page (payout.html) – EarnZilla Web App
+
+Purpose:
+
+To allow users to withdraw their earned PKR once minimum withdrawal conditions are met, and track the status of previous withdrawal requests.
+
+
+---
+
+UI Design & Layout
+
+Color Scheme:
+
+Background: White (#ffffff)
+
+Primary Text: Dark Navy (#1a1a2e)
+
+Buttons: Gold/Yellow (#f39c12)
+
+Success/Status Colors:
+
+Success: Green (#2ecc71)
+
+Pending: Orange (#f1c40f)
+
+Rejected: Red (#e74c3c)
+
+
+
+
+---
+
+Page Sections:
+
+1. Current Balance Card
+
+Large text showing user's current PKR balance.
+
+Text: “Your Wallet Balance: PKR XXXX”
+
+Styled card with a money icon.
+
+
+
+---
+
+2. Withdrawal Form
+
+Fields:
+
+Withdrawal Amount (Input field):
+
+Numeric field, min = Rs. 250
+
+Placeholder: “Enter amount (Min PKR 250)”
+
+
+Payment Method (Dropdown):
+
+Easypaisa
+
+JazzCash
+
+Bank Transfer (Optional)
+
+
+Account Number / IBAN (Text Input):
+
+Placeholder: “Enter valid account number or IBAN”
+
+
+Full Name (Text Input):
+
+Must match account name.
+
+
+
+Submit Button:
+
+“Request Withdrawal” (Disabled if form is invalid)
+
+
+
+---
+
+3. Conditions Note Section
+
+Small text below form:
+
+> Minimum withdrawal: PKR 5000
+
+Processing time: 1–3 business days
+
+Ensure account details are correct
+
+One withdrawal request at a time
+
+
+
+
+
+---
+
+4. Withdrawal History Table
+
+Request Date	Amount (PKR)	Method	Status
+
+25-May-2025	500	JazzCash	Pending
+20-May-2025	300	Easypaisa	Paid
+15-May-2025	600	Bank	Rejected
+
+
+Status is color-coded with badge or label.
+
+
+---
+
+Frontend Logic
+
+Disable submit if:
+
+Amount < 250
+
+Required fields are empty
+
+
+On submission:
+
+Show loading animation
+
+Store withdrawal request in Firestore under collection withdrawals
+
+Example structure:
+
+{
+  uid: "user123",
+  amount: 500,
+  method: "JazzCash",
+  accountNumber: "03001234567",
+  name: "Ali Khan",
+  status: "pending",
+  requestDate: "2025-05-25"
+}
+
+Show confirmation toast: “Withdrawal request submitted!”
+
+
+
+
+---
+
+Backend Logic (Firestore + Admin Panel)
+
+Admin reviews requests via admin.html
+
+Status options: pending, paid, rejected
+
+Once status is changed in Firestore:
+
+Update real-time on user payout page using onSnapshot()
+
+Optional: send FCM notification on status change
+
+
+
+
+---
+
+Security Considerations
+
+Firebase Security Rules:
+
+Users can only read/write their own withdrawal records.
+
+Only admin role can change status.
+
+
+Validate that amount <= user's balance
+
+Deduct balance only after admin approves (not on request)
+
+
+
+---
+
+ Enhancements
+
+FCM push notifications on payout status updates.
+
+Email confirmation after payout is approved.
+
+Export history button (PDF/CSV).
+
+Progress bar if withdrawal is processing.

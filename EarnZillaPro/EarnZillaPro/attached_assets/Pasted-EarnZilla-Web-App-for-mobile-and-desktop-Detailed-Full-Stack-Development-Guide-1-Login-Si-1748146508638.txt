@@ -1,0 +1,484 @@
+EarnZilla Web App for mobile and desktop— Detailed Full-Stack Development Guide
+
+
+---
+
+1. Login / Sign-Up Screen (login.html)
+
+Purpose:
+
+Authenticate users via Google and accept optional referral code.
+
+Design & Layout:
+
+Colors:
+
+Background: #1a1a2e (dark navy)
+
+Buttons: #f39c12 (gold/yellow for CTAs)
+
+Text: White (#ffffff)
+
+
+Layout:
+Centered card with app logo on top, Google sign-in button below, and optional referral code input field under the button.
+
+Fonts: Use Montserrat or Poppins for modern clean look.
+
+
+Features:
+
+Google Sign-In via Firebase Auth
+
+Optional referral code input textbox (max 10 chars)
+
+“Sign In” button triggers Firebase Google Auth popup.
+
+If referral code present & user logs in first time → link referral in Firestore.
+
+On success → redirect to dashboard.html.
+
+
+Backend Logic:
+
+Firebase Authentication for Google login.
+
+Firestore document check for user existence.
+
+If first login & referral code present:
+
+Update referral code owner’s referral count and earnings.
+
+
+Store user profile (UID, email, name, photoURL) in Firestore users collection.
+
+
+
+---
+
+2. Dashboard Screen (dashboard.html)
+
+Purpose:
+
+Main user interface showing earnings, progress, and navigation.
+
+Design & Layout:
+
+Colors:
+
+Background: #ffffff (clean white)
+
+Accent: #1a1a2e (navy) for navbar and cards
+
+Highlights: #f39c12 (gold) for earnings and buttons
+
+
+Layout:
+Responsive grid layout with header, main info cards, and footer navigation.
+Cards for balance, ads watched, daily tasks, referrals, badges.
+Floating button bar for quick actions.
+
+
+Features to Display:
+
+Current Balance: PKR with large font, gold color.
+
+Total Ads Watched: Numeric.
+
+Daily Task Status: Checklist or progress bar.
+
+Referral Count: Number and earnings.
+
+Badges Earned: Small icons in a horizontal scroll.
+
+
+Buttons:
+
+Watch Ad → watch.html
+
+Spin & Earn → dailybonus.html
+
+Leaderboard → leaderboard.html
+
+Video Challenge → challenge.html
+
+Lucky Draw → luckydraw.html
+
+Logout → Firebase Auth sign out + redirect to login
+
+
+Backend Logic:
+
+Fetch user data from Firestore (balance, ads watched, referrals, badges).
+
+Real-time listeners (onSnapshot) for updates.
+
+Show toast notifications on milestone achievements (e.g., new badge).
+
+
+
+---
+
+3. Watch Ads Screen (watch.html)
+
+Purpose:
+
+Show rewarded video ads, credit PKR after full watch.
+
+Design & Layout:
+
+Colors: Dark theme for focus: #121212 background, white text.
+
+Video ad container centered.
+
+Progress bar below video.
+
+“Next Ad” button disabled until ad fully watched.
+
+
+Features:
+
+Embedded ad SDK (e.g., Google AdSense / AdMob rewarded video).
+
+After ad completes → credit PKR (e.g., Rs 5 per ad).
+
+Update Firestore fields: totalEarnings, totalAdsWatched.
+
+Limit ads per day (e.g., max 20).
+
+
+Backend Logic:
+
+Track ad completion event.
+
+On complete: update user earnings and ads count atomically in Firestore.
+
+Use Firebase security rules to prevent abuse.
+
+
+
+---
+
+4. Spin & Earn Screen (dailybonus.html)
+
+Purpose:
+
+One daily spin wheel to win random PKR rewards.
+
+Design & Layout:
+
+Wheel UI using Winwheel.js with vibrant colors (#f39c12, #1a1a2e, #e67e22).
+
+“Spin” button in gold.
+
+Display prize popup after spin.
+
+
+Features:
+
+One spin per user per day (track lastSpinDate).
+
+Before prize awarded, user must watch rewarded ad.
+
+Random reward distribution: PKR 5, 10, 20, etc.
+
+Update Firestore balance on prize claim.
+
+
+Backend Logic:
+
+Check spin eligibility on page load.
+
+Integrate rewarded ad before prize claim.
+
+Update lastSpinDate after successful spin.
+
+
+
+---
+
+5. Leaderboard (leaderboard.html)
+
+Purpose:
+
+Show top 10 earners weekly.
+
+Design & Layout:
+
+List view with profile pics (circular), username, total earnings.
+
+Background white, navy accents.
+
+Highlight top 3 with gold, silver, bronze colors.
+
+
+Features:
+
+Leaderboard data fetched from Firestore.
+
+Updated weekly by Firebase Cloud Function.
+
+
+Backend Logic:
+
+Cloud Function aggregates and ranks users every week.
+
+Firestore stores leaderboard collection.
+
+Frontend listens for leaderboard changes in real-time or on page load.
+
+
+
+---
+
+6. Badge System (badges.html)
+
+Purpose:
+
+Show achievement badges, locked/unlocked status.
+
+Design & Layout:
+
+Grid layout of badges with icons.
+
+Locked badges grayscale, unlocked in full color.
+
+Tooltip or modal with badge description.
+
+
+Features:
+
+Unlock badges on milestones (e.g., 100 ads watched, 10 referrals).
+
+Show toast notifications on unlock.
+
+
+Backend Logic:
+
+Badge state stored in Firestore per user.
+
+Unlock logic triggered in backend or frontend after task completion.
+
+
+
+---
+
+7. Referral Tracker (referral.html)
+
+Purpose:
+
+Allow users to share referral code, track referrals and earnings.
+
+Design & Layout:
+
+Shareable referral code box with copy button.
+
+Real-time joined user list below.
+
+Earnings summary.
+
+
+Features:
+
+Real-time updates via Firestore onSnapshot.
+
+“Share” buttons for social media.
+
+Referral earnings auto-update.
+
+
+
+---
+
+8. Video Challenge (challenge.html)
+
+Purpose:
+
+Users upload video entries for weekly challenges.
+
+Design & Layout:
+
+Instructions header.
+
+Upload button (file picker).
+
+List of past winners & top submissions with thumbnails.
+
+
+Features:
+
+Upload videos to Firebase Storage.
+
+Admin panel to review and approve.
+
+Winner selection logic.
+
+
+Backend Logic:
+
+Storage rules to allow only user uploads.
+
+Firestore stores metadata: video URL, user, timestamp.
+
+Admin triggers winner selection.
+
+
+
+---
+
+9. Weekly Lucky Draw (luckydraw.html)
+
+Purpose:
+
+Users enter weekly lucky draw via ads/referrals.
+
+Design & Layout:
+
+Show current entries count.
+
+Prize info section.
+
+Winner list from last week.
+
+
+Features:
+
+1 ad watched = 1 entry.
+
+1 referral = 5 entries.
+
+Cloud Function picks winner weekly.
+
+
+Backend Logic:
+
+Firestore stores entries count.
+
+Cloud Function runs weekly draw and updates winner.
+
+
+
+---
+
+10. Offline Mode Reminder (Push Notifications)
+
+Purpose:
+
+Push notifications to inactive users reminding to watch ads.
+
+Implementation:
+
+Firebase Cloud Messaging (FCM).
+
+Schedule daily notifications via Cloud Functions.
+
+Message: “Watch 3 ads now, earn PKR 150!”
+
+
+
+---
+
+Backend Services Setup
+
+Firebase Authentication: Google login.
+
+Firestore Database: Collections for users, referrals, badges, leaderboard, entries.
+
+Cloud Functions:
+
+Leaderboard update (weekly)
+
+Lucky draw scheduler
+
+Push notifications
+
+Referral linking
+
+
+Firebase Storage: For video challenge uploads.
+
+FCM: For push notifications.
+
+
+
+---
+
+Admin Panel (admin.html)
+
+Purpose:
+
+Manage users, video challenge, lucky draws, bans.
+
+Design & Layout:
+
+Tabbed interface: Users, Video Challenges, Lucky Draw, Bans.
+
+Data tables with search & filters.
+
+Approve/reject buttons for videos.
+
+Trigger buttons for lucky draw.
+
+
+Features:
+
+Secure access (role-based).
+
+Real-time data updates.
+
+Ban users by setting flag in Firestore.
+
+
+
+---
+
+Monetization Plan
+
+Use Google AdSense or AdMob for real ads.
+
+Reward users from ad revenue ensuring ROI.
+
+Limit reward rates (e.g., Rs 5 per ad but ad revenue is Rs 10) to keep profits.
+
+Monitor with analytics.
+
+
+
+---
+
+Summary: Full Development Flow
+
+1. Setup Firebase project with Auth, Firestore, Storage, Functions, FCM.
+
+
+2. Build Login screen with Google sign-in and referral code logic.
+
+
+3. Create Dashboard with real-time Firestore data bindings.
+
+
+4. Integrate rewarded ads SDK in watch.html and dailybonus.html.
+
+
+5. Implement Spin & Earn wheel with daily limits.
+
+
+6. Setup Cloud Functions for leaderboard and lucky draw automation.
+
+
+7. Develop badges and referral tracking UIs with Firestore listeners.
+
+
+8. Create video challenge upload and admin approval flow.
+
+
+9. Add push notifications using Firebase Cloud Messaging.
+
+
+10. Design Admin Panel for backend controls.
+
+
+11. Test all features end-to-end.
+
+
+12. Deploy and monitor analytics & ad revenue.
